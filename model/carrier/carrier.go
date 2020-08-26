@@ -44,6 +44,10 @@ func GetCarriers(req *shoppb.ListCarrierReq, page, pageSize uint64) ([]*Carrier,
 		query = query.Where("name like ?", "%"+req.Name+"%")
 	}
 
+	if req.Code != "" {
+		query = query.Where("code like ?", "%"+req.Code+"%")
+	}
+
 	if req.Status > 0 {
 		query = query.Where("status = ?", req.Status)
 	}
