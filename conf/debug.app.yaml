@@ -16,4 +16,4 @@ etcd:
 grpc:
   name: project/shop
   host: 127.0.0.1:5559
-  port: 15000
+  port: 25000
