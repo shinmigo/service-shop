@@ -63,7 +63,6 @@ func (c *Carrier) AddCarrier(ctx context.Context, req *shoppb.Carrier) (*basepb.
 		Status:    req.Status,
 		CreatedBy: req.AdminId,
 		UpdatedBy: req.AdminId,
-		DeletedBy: 0,
 	}
 	if err := db.Conn.Create(&carrier).Error; err != nil {
 		return nil, err
@@ -103,6 +102,17 @@ func (c *Carrier) EditCarrier(ctx context.Context, req *shoppb.Carrier) (*basepb
 	}
 	return &basepb.AnyRes{
 		Id:                   req.CarrierId,
+		State:                1,
+	}, nil
+}
+
+func (c *Carrier) EditCarrierStatus(ctx context.Context, req *shoppb.EditCarrierStatusReq) (*basepb.AnyRes, error)  {
+	db.Conn.Table(carrier.GetTableName()).Where("carrier_id in (?)", req.CarrierId).Updates(map[string]interface{}{
+		"status":     req.Status,
+		"updated_by": req.AdminId,
+	})
+	return &basepb.AnyRes{
+		Id:                   0,
 		State:                1,
 	}, nil
 }

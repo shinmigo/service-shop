@@ -17,7 +17,7 @@ type Carrier struct {
 	UpdatedBy uint64         `json:"updated_by"`
 	CreatedAt utils.JSONTime `json:"created_at"`
 	UpdatedAt utils.JSONTime `json:"updated_at"`
-	DeletedBy uint64 `json:"deleted_by"`
+	DeletedAt *utils.JSONTime `json:"deleted_at"`
 }
 
 func GetTableName() string  {
