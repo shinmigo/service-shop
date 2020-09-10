@@ -12,14 +12,13 @@ import (
 )
 
 type Carrier struct {
-
 }
 
-func NewCarrier() *Carrier  {
+func NewCarrier() *Carrier {
 	return &Carrier{}
 }
 
-func (c *Carrier) GetCarrierList(ctx context.Context, req *shoppb.ListCarrierReq) (*shoppb.ListCarrierRes, error)  {
+func (c *Carrier) GetCarrierList(ctx context.Context, req *shoppb.ListCarrierReq) (*shoppb.ListCarrierRes, error) {
 	var page uint64 = 1
 	if req.Page > 0 {
 		page = req.Page
@@ -38,24 +37,24 @@ func (c *Carrier) GetCarrierList(ctx context.Context, req *shoppb.ListCarrierReq
 
 	for k := range rows {
 		carrierDetails = append(carrierDetails, &shoppb.CarrierDetail{
-			CarrierId:            rows[k].CarrierId,
-			Name:                 rows[k].Name,
-			Code:                 rows[k].Code,
-			Sort:                 rows[k].Sort,
-			Status:               rows[k].Status,
-			CreatedBy:            rows[k].CreatedBy,
-			UpdatedBy:            rows[k].UpdatedBy,
-			CreatedAt:            rows[k].CreatedAt.Format(utils.TIME_STD_FORMART),
-			UpdatedAt:            rows[k].UpdatedAt.Format(utils.TIME_STD_FORMART),
+			CarrierId: rows[k].CarrierId,
+			Name:      rows[k].Name,
+			Code:      rows[k].Code,
+			Sort:      rows[k].Sort,
+			Status:    rows[k].Status,
+			CreatedBy: rows[k].CreatedBy,
+			UpdatedBy: rows[k].UpdatedBy,
+			CreatedAt: rows[k].CreatedAt.Format(utils.TIME_STD_FORMART),
+			UpdatedAt: rows[k].UpdatedAt.Format(utils.TIME_STD_FORMART),
 		})
 	}
 	return &shoppb.ListCarrierRes{
-		Total:                total,
-		Carriers:             carrierDetails,
+		Total:    total,
+		Carriers: carrierDetails,
 	}, nil
 }
 
-func (c *Carrier) AddCarrier(ctx context.Context, req *shoppb.Carrier) (*basepb.AnyRes, error)  {
+func (c *Carrier) AddCarrier(ctx context.Context, req *shoppb.Carrier) (*basepb.AnyRes, error) {
 	carrier := carrier.Carrier{
 		Name:      req.Name,
 		Code:      req.Code,
@@ -67,21 +66,21 @@ func (c *Carrier) AddCarrier(ctx context.Context, req *shoppb.Carrier) (*basepb.
 	if err := db.Conn.Create(&carrier).Error; err != nil {
 		return nil, err
 	}
-	
+
 	return &basepb.AnyRes{
-		Id:                   carrier.CarrierId,
-		State:                1,
+		Id:    carrier.CarrierId,
+		State: 1,
 	}, nil
 }
 
-func (c *Carrier) DelCarrier(ctx context.Context, req *shoppb.DelCarrierReq) (*basepb.AnyRes, error)  {
-	if err := db.Conn.Where("carrier_id = ?", req.CarrierId).Delete(&shoppb.Carrier{}).Error; err != nil {
+func (c *Carrier) DelCarrier(ctx context.Context, req *shoppb.DelCarrierReq) (*basepb.AnyRes, error) {
+	if err := db.Conn.Where("carrier_id in (?)", req.CarrierId).Delete(&shoppb.Carrier{}).Error; err != nil {
 		return nil, err
 	}
 
 	return &basepb.AnyRes{
-		Id:                   req.CarrierId,
-		State:                1,
+		Id:    req.CarrierId[0],
+		State: 1,
 	}, nil
 }
 
@@ -97,22 +96,22 @@ func (c *Carrier) EditCarrier(ctx context.Context, req *shoppb.Carrier) (*basepb
 		CreatedBy: req.AdminId,
 		UpdatedBy: req.AdminId,
 	}
-	if err := db.Conn.Model(&carrier.Carrier{CarrierId:req.CarrierId}).Update(row).Error; err != nil {
+	if err := db.Conn.Model(&carrier.Carrier{CarrierId: req.CarrierId}).Update(row).Error; err != nil {
 		return nil, err
 	}
 	return &basepb.AnyRes{
-		Id:                   req.CarrierId,
-		State:                1,
+		Id:    req.CarrierId,
+		State: 1,
 	}, nil
 }
 
-func (c *Carrier) EditCarrierStatus(ctx context.Context, req *shoppb.EditCarrierStatusReq) (*basepb.AnyRes, error)  {
+func (c *Carrier) EditCarrierStatus(ctx context.Context, req *shoppb.EditCarrierStatusReq) (*basepb.AnyRes, error) {
 	db.Conn.Table(carrier.GetTableName()).Where("carrier_id in (?)", req.CarrierId).Updates(map[string]interface{}{
 		"status":     req.Status,
 		"updated_by": req.AdminId,
 	})
 	return &basepb.AnyRes{
-		Id:                   0,
-		State:                1,
+		Id:    0,
+		State: 1,
 	}, nil
 }

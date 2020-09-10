@@ -2,29 +2,30 @@ package carrier
 
 import (
 	"fmt"
-	"github.com/shinmigo/pb/shoppb"
 	"goshop/service-shop/pkg/db"
 	"goshop/service-shop/pkg/utils"
+
+	"github.com/shinmigo/pb/shoppb"
 )
 
 type Carrier struct {
-	CarrierId uint64         `json:"carrier_id" gorm:"PRIMARY_KEY"`
-	Name      string              `json:"name"`
-	Code      string              `json:"code"`
-	Sort 	  uint32              `json:"sort"`
+	CarrierId uint64 `json:"carrier_id" gorm:"PRIMARY_KEY"`
+	Name      string `json:"name"`
+	Code      string `json:"code"`
+	Sort      uint32 `json:"sort"`
 	Status    shoppb.CarrierStatus
-	CreatedBy uint64         `json:"created_by"`
-	UpdatedBy uint64         `json:"updated_by"`
-	CreatedAt utils.JSONTime `json:"created_at"`
-	UpdatedAt utils.JSONTime `json:"updated_at"`
+	CreatedBy uint64          `json:"created_by"`
+	UpdatedBy uint64          `json:"updated_by"`
+	CreatedAt utils.JSONTime  `json:"created_at"`
+	UpdatedAt utils.JSONTime  `json:"updated_at"`
 	DeletedAt *utils.JSONTime `json:"deleted_at"`
 }
 
-func GetTableName() string  {
+func GetTableName() string {
 	return "carrier"
 }
 
-func GetField() []string  {
+func GetField() []string {
 	return []string{
 		"carrier_id", "name", "code", "sort", "name", "status", "created_by", "updated_by", "created_at", "updated_at",
 	}
@@ -52,12 +53,12 @@ func GetCarriers(req *shoppb.ListCarrierReq, page, pageSize uint64) ([]*Carrier,
 		query = query.Where("status = ?", req.Status)
 	}
 
-	err := query.Offset((page - 1) * pageSize).Limit(pageSize).Find(&rows).Error
+	query.Count(&total)
+	err := query.Order("carrier_id desc").Offset((page - 1) * pageSize).Limit(pageSize).Find(&rows).Error
 	if err != nil {
-		return  nil, total, err
+		return nil, total, err
 	}
 
-	query.Count(&total)
 	return rows, total, nil
 }
 
@@ -68,10 +69,8 @@ func ExistCarrierById(id uint64) (bool, error) {
 	carrier := Carrier{}
 	err := db.Conn.Select("carrier_id").Where("carrier_id=?", id).First(&carrier).Error
 	if err != nil {
-		return false, fmt.Errorf("err: v%", err)
+		return false, fmt.Errorf("err: %v", err)
 	}
 
 	return true, nil
 }
-
-
