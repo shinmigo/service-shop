@@ -4,6 +4,7 @@ import (
 	"goshop/service-shop/pkg/db"
 
 	"github.com/jinzhu/gorm"
+	"github.com/shinmigo/pb/shoppb"
 )
 
 type Area struct {
@@ -12,6 +13,11 @@ type Area struct {
 	Level    uint8  `json:"level"`
 	Code     uint64 `json:"code"`
 	Name     string `json:"name"`
+}
+
+type AreaName struct {
+	Code uint64 `json:"code"`
+	Name string `json:"name"`
 }
 
 func GetTableName() string {
@@ -55,5 +61,19 @@ func GetAreaList(level uint8, parentId int64) ([]*Area, error) {
 		return nil, err
 	}
 
+	return rows, nil
+}
+
+func GetAreaNameByCodes(codes []uint64) ([]*shoppb.AreaNameCode, error) {
+	rows := make([]*shoppb.AreaNameCode, 0, len(codes))
+
+	err := db.Conn.Table(GetTableName()).
+		Select("code, name").
+		Where("code in (?)", codes).
+		Find(&rows).Error
+
+	if err != nil {
+		return nil, err
+	}
 	return rows, nil
 }

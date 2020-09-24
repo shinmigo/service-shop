@@ -76,3 +76,14 @@ func (m *Area) GetAreaList(ctx context.Context, req *shoppb.ListAreaReq) (*shopp
 		Areas: prov,
 	}, nil
 }
+
+func (m *Area) GetAreaNameByCodes(ctx context.Context, req *shoppb.AreaCodeReq) (*shoppb.AreaNameRes, error) {
+	rows, err := area.GetAreaNameByCodes(req.Codes)
+	if err != nil {
+		return nil, err
+	}
+
+	return &shoppb.AreaNameRes{
+		Codes: rows,
+	}, nil
+}
