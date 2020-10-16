@@ -11,7 +11,7 @@ import (
 type Area struct {
 }
 
-func NewMArea() *Area {
+func NewArea() *Area {
 	return &Area{}
 }
 
