@@ -25,7 +25,7 @@ func (p *Payment) GetPaymentList(ctx context.Context, req *shoppb.ListPaymentReq
 	for k := range rows {
 		list = append(list, &shoppb.Payment{
 			Id:     rows[k].Id,
-			Code:   rows[k].Code,
+			Code:   shoppb.PaymentCode(rows[k].Code),
 			Name:   rows[k].Name,
 			Params: rows[k].Params,
 			Status: shoppb.PaymentStatus(rows[k].Status),
@@ -37,7 +37,7 @@ func (p *Payment) GetPaymentList(ctx context.Context, req *shoppb.ListPaymentReq
 }
 
 func (p *Payment) GetPaymentDetail(ctx context.Context, req *shoppb.PaymentCodeReq) (*shoppb.Payment, error) {
-	row, err := payment.GetOneByCode(req.Code, int32(shoppb.PaymentStatus_Open))
+	row, err := payment.GetOneByCode(int32(req.Code), int32(shoppb.PaymentStatus_Open))
 	
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (p *Payment) GetPaymentDetail(ctx context.Context, req *shoppb.PaymentCodeR
 	
 	return &shoppb.Payment{
 		Id:     row.Id,
-		Code:   row.Code,
+		Code:   shoppb.PaymentCode(row.Code),
 		Name:   row.Name,
 		Params: row.Params,
 		Status: shoppb.PaymentStatus(row.Status),

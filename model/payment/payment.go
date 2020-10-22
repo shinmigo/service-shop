@@ -8,7 +8,7 @@ import (
 
 type Payment struct {
 	Id     uint64 `json:"id" gorm:"PRIMARY_KEY"`
-	Code   string
+	Code   int32
 	Name   string
 	Params string
 	Status int32
@@ -43,8 +43,8 @@ func GetPaymentList(status int32) ([]*Payment, error) {
 	return rows, nil
 }
 
-func GetOneByCode(code string, status int32) (*Payment, error) {
-	if len(code) == 0 {
+func GetOneByCode(code int32, status int32) (*Payment, error) {
+	if code == 0 {
 		return nil, fmt.Errorf("code is null")
 	}
 	row := &Payment{}
