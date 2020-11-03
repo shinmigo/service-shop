@@ -38,7 +38,6 @@ func (p *Payment) DeletePayment(ctx context.Context, req *shoppb.DeletePaymentRe
 
 func (p *Payment) AddPayment(ctx context.Context, req *shoppb.Payment) (*basepb.AnyRes, error) {
 	buf := &payment.Payment{
-		Id:     req.Id,
 		Code:   req.Code,
 		Name:   req.Name,
 		Params: req.Params,
