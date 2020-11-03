@@ -88,7 +88,6 @@ func Run(grpcIsTrue chan bool) {
 	shoppb.RegisterCarrierServiceServer(g, rpc.NewCarrier())
 	shoppb.RegisterAreaServiceServer(g, rpc.NewArea())
 	shoppb.RegisterPaymentServiceServer(g, rpc.NewPayment())
-	shoppb.RegisterPaymentServiceServer(g, rpc.NewPayment())
 
 	// 在gRPC服务器上注册反射服务
 	reflection.Register(g)
