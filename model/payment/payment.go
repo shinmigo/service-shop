@@ -12,6 +12,7 @@ type Payment struct {
 	Name   string
 	Params string
 	Status int32
+	Sort   uint64
 }
 
 func GetTableName() string {
