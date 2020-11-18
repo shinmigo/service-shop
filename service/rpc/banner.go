@@ -33,17 +33,15 @@ func (m *BannerAd) GetBannerAdList(ctx context.Context, req *shoppb.ListBannerAd
 	detailList := make([]*shoppb.BannerAdDetail, 0, req.PageSize)
 	for k := range lists {
 		detailList = append(detailList, &shoppb.BannerAdDetail{
-			Id:          lists[k].Id,
-			EleType:     lists[k].EleType,
-			ImageUrl:    lists[k].ImageUrl,
-			RedirectUrl: lists[k].RedirectUrl,
-			Sort:        lists[k].Sort,
-			Status:      lists[k].Status,
-			TagName:     lists[k].TagName,
-			CreatedBy:   lists[k].CreatedBy,
-			UpdatedBy:   lists[k].UpdatedBy,
-			CreatedAt:   lists[k].CreatedAt.Format(utils.TIME_STD_FORMART),
-			UpdatedAt:   lists[k].UpdatedAt.Format(utils.TIME_STD_FORMART),
+			Id:        lists[k].Id,
+			EleType:   lists[k].EleType,
+			EleInfo:   lists[k].EleInfo,
+			Status:    lists[k].Status,
+			TagName:   lists[k].TagName,
+			CreatedBy: lists[k].CreatedBy,
+			UpdatedBy: lists[k].UpdatedBy,
+			CreatedAt: lists[k].CreatedAt.Format(utils.TIME_STD_FORMART),
+			UpdatedAt: lists[k].UpdatedAt.Format(utils.TIME_STD_FORMART),
 		})
 	}
 	if ctx.Err() == context.Canceled {
@@ -58,14 +56,12 @@ func (m *BannerAd) GetBannerAdList(ctx context.Context, req *shoppb.ListBannerAd
 
 func (m *BannerAd) AddBannerAd(ctx context.Context, req *shoppb.BannerAd) (*basepb.AnyRes, error) {
 	bannerAdd := banner.BannerAd{
-		EleType:     req.EleType,
-		ImageUrl:    req.ImageUrl,
-		RedirectUrl: req.RedirectUrl,
-		Sort:        req.Sort,
-		Status:      req.Status,
-		TagName:     req.TagName,
-		CreatedBy:   req.AdminId,
-		UpdatedBy:   req.AdminId,
+		EleType:   req.EleType,
+		EleInfo:   req.EleInfo,
+		Status:    req.Status,
+		TagName:   req.TagName,
+		CreatedBy: req.AdminId,
+		UpdatedBy: req.AdminId,
 	}
 	err := db.Conn.Create(&bannerAdd).Error
 	if err != nil {
@@ -88,14 +84,12 @@ func (m *BannerAd) EditBannerAd(ctx context.Context, req *shoppb.BannerAd) (*bas
 	}
 
 	updateData := banner.BannerAd{
-		EleType:     req.EleType,
-		ImageUrl:    req.ImageUrl,
-		RedirectUrl: req.RedirectUrl,
-		Sort:        req.Sort,
-		TagName:     req.TagName,
-		Status:      req.Status,
-		CreatedBy:   req.AdminId,
-		UpdatedBy:   req.AdminId,
+		EleType:   req.EleType,
+		EleInfo:   req.EleInfo,
+		TagName:   req.TagName,
+		Status:    req.Status,
+		CreatedBy: req.AdminId,
+		UpdatedBy: req.AdminId,
 	}
 	err = db.Conn.Table(banner.GetTableName()).Where("id = ?", req.Id).Update(updateData).Error
 	if err != nil {
