@@ -20,6 +20,7 @@ type BannerAd struct {
 	CreatedAt   utils.JSONTime  `json:"created_at"`
 	UpdatedAt   utils.JSONTime  `json:"updated_at"`
 	DeletedAt   *utils.JSONTime `json:"deleted_at"`
+	TagName     string          `json:"tag_name"`
 }
 
 func GetTableName() string {
@@ -28,7 +29,7 @@ func GetTableName() string {
 
 func GetField() []string {
 	return []string{
-		"id", "ele_type", "image_url", "redirect_url", "sort", "status", "created_by", "updated_by", "created_at", "updated_at",
+		"id", "ele_type", "image_url", "redirect_url", "sort", "tag_name", "status", "created_by", "updated_by", "created_at", "updated_at",
 	}
 }
 
@@ -44,6 +45,9 @@ func GetBannerAds(req *shoppb.ListBannerAdReq) (lists []*BannerAd, total uint64,
 	}
 	if req.EleType > 0 {
 		query = query.Where("ele_type = ?", req.EleType)
+	}
+	if len(req.TagName) > 0 {
+		query = query.Where("tag_name like ?", req.TagName+"%")
 	}
 
 	query.Count(&total)

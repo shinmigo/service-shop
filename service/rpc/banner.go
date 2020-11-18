@@ -39,6 +39,7 @@ func (m *BannerAd) GetBannerAdList(ctx context.Context, req *shoppb.ListBannerAd
 			RedirectUrl: lists[k].RedirectUrl,
 			Sort:        lists[k].Sort,
 			Status:      lists[k].Status,
+			TagName:     lists[k].TagName,
 			CreatedBy:   lists[k].CreatedBy,
 			UpdatedBy:   lists[k].UpdatedBy,
 			CreatedAt:   lists[k].CreatedAt.Format(utils.TIME_STD_FORMART),
@@ -62,6 +63,7 @@ func (m *BannerAd) AddBannerAd(ctx context.Context, req *shoppb.BannerAd) (*base
 		RedirectUrl: req.RedirectUrl,
 		Sort:        req.Sort,
 		Status:      req.Status,
+		TagName:     req.TagName,
 		CreatedBy:   req.AdminId,
 		UpdatedBy:   req.AdminId,
 	}
@@ -90,6 +92,7 @@ func (m *BannerAd) EditBannerAd(ctx context.Context, req *shoppb.BannerAd) (*bas
 		ImageUrl:    req.ImageUrl,
 		RedirectUrl: req.RedirectUrl,
 		Sort:        req.Sort,
+		TagName:     req.TagName,
 		Status:      req.Status,
 		CreatedBy:   req.AdminId,
 		UpdatedBy:   req.AdminId,
